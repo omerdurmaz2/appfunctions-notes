@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">AppFunctions Notes</string>
+    <string name="appfunctions_display_description">Create, find and trash your notes.</string>
+    <string name="empty_hint">No notes yet. Create one from adb or another caller, see the README.</string>
+    <string name="allow_create">Let assistants create notes</string>
+    <string name="move_to_trash">Move to trash</string>
+    <string name="trash">Trash</string>
+    <string name="empty_trash">Empty trash</string>
+    <string name="restore">Restore</string>
+</resources>

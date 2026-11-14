@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AppFunctionAppMetadata xmlns:appfn="http://schemas.android.com/apk/res-auto"
+    appfn:instructions="Personal notes app. Call searchNotes to find a noteId before calling a function that takes one. createNote and moveNoteToTrash are safe to retry. Titles are 1 to 100 characters."
+    appfn:displayDescription="@string/appfunctions_display_description" />

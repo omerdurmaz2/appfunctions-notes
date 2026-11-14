@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appfunctions_display_description">Notlarınızı oluşturur, bulur ve çöpe taşır.</string>
+    <string name="empty_hint">Henüz not yok. adb ya da başka bir çağıranla not oluşturun, README\'ye bakın.</string>
+    <string name="allow_create">Asistanlar not oluşturabilsin</string>
+    <string name="move_to_trash">Çöpe taşı</string>
+    <string name="trash">Çöp kutusu</string>
+    <string name="empty_trash">Çöpü boşalt</string>
+    <string name="restore">Geri al</string>
+</resources>
