@@ -18,7 +18,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
       # The Robolectric tests call the real AppFunctions through AppFunctionTestRule.
       # The instrumented test needs an API 36.1+ emulator, so CI only builds it.
       - run: ./gradlew assembleDebug assembleDebugAndroidTest testDebugUnitTest lint
