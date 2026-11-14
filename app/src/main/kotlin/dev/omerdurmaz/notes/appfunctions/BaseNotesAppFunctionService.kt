@@ -78,7 +78,8 @@ abstract class BaseNotesAppFunctionService : AppFunctionService() {
     suspend fun moveNoteToTrash(noteId: String): Note =
         notes.moveToTrash(noteId)?.toNote()
             ?: throw AppFunctionElementNotFoundException(
-                "No note with noteId $noteId. Call searchNotes and use a noteId from its results.",
+                "No note with noteId $noteId. " +
+                    "Call searchNotes and use a noteId from its results.",
             )
 
     /**

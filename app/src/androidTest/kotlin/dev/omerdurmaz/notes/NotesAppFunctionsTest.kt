@@ -6,6 +6,7 @@ import androidx.appfunctions.AppFunctionManager
 import androidx.appfunctions.AppFunctionSearchSpec
 import androidx.appfunctions.ExecuteAppFunctionRequest
 import androidx.appfunctions.ExecuteAppFunctionResponse
+import androidx.appfunctions.ExecuteAppFunctionResponse.Success
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
@@ -23,12 +24,15 @@ class NotesAppFunctionsTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
     private val manager = checkNotNull(AppFunctionManager.getInstance(context))
 
+    private val ownFunctions =
+        AppFunctionSearchSpec(packageNames = setOf(context.packageName))
+
     private suspend fun call(
         functionId: String,
         params: AppFunctionData.Builder.() -> Unit,
     ): ExecuteAppFunctionResponse {
         val metadata = manager
-            .searchAppFunctions(AppFunctionSearchSpec(packageNames = setOf(context.packageName)))
+            .searchAppFunctions(ownFunctions)
             .single { it.id == functionId }
         val data = AppFunctionData.Builder(metadata.parameters, metadata.components)
             .apply(params)
@@ -39,8 +43,8 @@ class NotesAppFunctionsTest {
     }
 
     private fun ExecuteAppFunctionResponse.note(): Note =
-        (this as ExecuteAppFunctionResponse.Success).returnValue
-            .getAppFunctionData(ExecuteAppFunctionResponse.Success.PROPERTY_RETURN_VALUE)!!
+        (this as Success).returnValue
+            .getAppFunctionData(Success.PROPERTY_RETURN_VALUE)!!
             .deserialize(Note::class.java)
 
     @Test
@@ -57,10 +61,11 @@ class NotesAppFunctionsTest {
     @Test
     fun appMetadata_instructionsReachTheCaller() = runBlocking {
         val packageMetadata = manager
-            .searchAppFunctions(AppFunctionSearchSpec(packageNames = setOf(context.packageName)))
+            .searchAppFunctions(ownFunctions)
             .first()
             .packageMetadata
-        val appMetadata = checkNotNull(packageMetadata).resolveAppFunctionAppMetadata(context)
+        val appMetadata = checkNotNull(packageMetadata)
+            .resolveAppFunctionAppMetadata(context)
         assertTrue(checkNotNull(appMetadata).instructions.startsWith("Personal notes app."))
     }
 

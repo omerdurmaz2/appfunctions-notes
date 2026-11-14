@@ -6,6 +6,7 @@ import androidx.appfunctions.AppFunctionInvalidArgumentException
 import androidx.appfunctions.AppFunctionSearchSpec
 import androidx.appfunctions.ExecuteAppFunctionRequest
 import androidx.appfunctions.ExecuteAppFunctionResponse
+import androidx.appfunctions.ExecuteAppFunctionResponse.Success
 import androidx.appfunctions.testing.AppFunctionTestRule
 import androidx.test.core.app.ApplicationProvider
 import dev.omerdurmaz.notes.appfunctions.Note
@@ -27,13 +28,16 @@ class NotesAppFunctionsJvmTest {
     @get:Rule
     val appFunctions = AppFunctionTestRule(context)
 
+    private val ownFunctions =
+        AppFunctionSearchSpec(packageNames = setOf(context.packageName))
+
     private suspend fun call(
         functionId: String,
         params: AppFunctionData.Builder.() -> Unit,
     ): ExecuteAppFunctionResponse {
         val manager = appFunctions.getAppFunctionManager()
         val metadata = manager
-            .searchAppFunctions(AppFunctionSearchSpec(packageNames = setOf(context.packageName)))
+            .searchAppFunctions(ownFunctions)
             .single { it.id == functionId }
         val data = AppFunctionData.Builder(metadata.parameters, metadata.components)
             .apply(params)
@@ -44,8 +48,8 @@ class NotesAppFunctionsJvmTest {
     }
 
     private fun ExecuteAppFunctionResponse.note(): Note =
-        (this as ExecuteAppFunctionResponse.Success).returnValue
-            .getAppFunctionData(ExecuteAppFunctionResponse.Success.PROPERTY_RETURN_VALUE)!!
+        (this as Success).returnValue
+            .getAppFunctionData(Success.PROPERTY_RETURN_VALUE)!!
             .deserialize(Note::class.java)
 
     @Test
@@ -75,12 +79,12 @@ class NotesAppFunctionsJvmTest {
             setString("title", "Dentist")
             setString("content", "Thursday 10:30, bring the X-ray")
         }
-        // maxResults is left out on purpose: the function gets 0 and uses its own default.
+        // maxResults is left out on purpose: the function gets 0 and uses its default.
         val response = call(NotesAppFunctionService.FUNCTION_ID_SEARCH_NOTES) {
             setString("query", "x-ray")
         }
-        val found = (response as ExecuteAppFunctionResponse.Success).returnValue
-            .getAppFunctionDataList(ExecuteAppFunctionResponse.Success.PROPERTY_RETURN_VALUE)!!
+        val found = (response as Success).returnValue
+            .getAppFunctionDataList(Success.PROPERTY_RETURN_VALUE)!!
             .map { it.deserialize(Note::class.java) }
         assertEquals(listOf("Dentist"), found.map { it.title })
     }
