@@ -55,6 +55,16 @@ class NotesAppFunctionsTest {
     }
 
     @Test
+    fun appMetadata_instructionsReachTheCaller() = runBlocking {
+        val packageMetadata = manager
+            .searchAppFunctions(AppFunctionSearchSpec(packageNames = setOf(context.packageName)))
+            .first()
+            .packageMetadata
+        val appMetadata = checkNotNull(packageMetadata).resolveAppFunctionAppMetadata(context)
+        assertTrue(checkNotNull(appMetadata).instructions.startsWith("Personal notes app."))
+    }
+
+    @Test
     fun searchNotes_blankQueryTellsTheCallerWhatToDo() = runBlocking {
         val response = call(NotesAppFunctionService.FUNCTION_ID_SEARCH_NOTES) {
             setString("query", " ")
