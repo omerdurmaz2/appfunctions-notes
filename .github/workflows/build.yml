@@ -23,7 +23,7 @@ jobs:
       # The instrumented test needs an API 36.1+ emulator, so CI only builds it.
       - run: ./gradlew assembleDebug assembleDebugAndroidTest testDebugUnitTest lint
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: reports
           path: app/build/reports/
